@@ -1,0 +1,25 @@
+version: '3.5'
+services:
+  atuin:
+    build:
+      context: .
+    restart: always
+    links:
+      - postgresql:db
+    ports:
+      - 8888:8888
+    environment:
+      ATUIN_HOST: $ATUIN_HOST
+      ATUIN_PORT: $ATUIN_PORT
+      ATUIN_OPEN_REGISTRATION: $ATUIN_OPEN_REGISTRATION
+      ATUIN_DB_URI: $ATUIN_DB_URI
+      ATUIN_PAGE_SIZE: $ATUIN_PAGE_SIZE
+  postgresql:
+    image: postgres:14
+    restart: unless-stopped
+    volumes: # Don't remove permanent storage for index database files!
+      - "./database:/var/lib/postgresql/data/"
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
